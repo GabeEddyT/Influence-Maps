@@ -8,12 +8,20 @@ public class Node : MonoBehaviour
     float Weight = 0.0f;
 
     public float NodeSizeMultiplier;
-
+    GameObject gridImage;
     void Start()
     {
-        GameObject gridImage = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        gridImage.transform.localScale /= 10;
+        gridImage = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        gridImage.transform.parent = this.gameObject.transform;
+        gridImage.transform.localScale /= 10.5f;
         gridImage.transform.localScale *= NodeSizeMultiplier;
+        // Invoke("ResetPlaneLocation", .4f);
+        ResetPlaneLocation();
+    }
+
+    public void ResetPlaneLocation()
+    {
+        gridImage.transform.localPosition = Vector3.zero;   
     }
 
 
@@ -22,5 +30,5 @@ public class Node : MonoBehaviour
     {
         Weight = newWeight;
     }
-
+        
 }

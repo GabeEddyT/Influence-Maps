@@ -15,6 +15,10 @@ public class GenerateGrid : MonoBehaviour
             for (int y = 0; y < GridSize.y; y++)
             {
                 GameObject newNode = Instantiate(NodeObjectPrefab, Vector3.zero, Quaternion.identity);
+                Vector3 NewNodePos = new Vector3(x * NodeObjectPrefab.GetComponent<Node>().NodeSizeMultiplier,
+                                                0, y * NodeObjectPrefab.GetComponent<Node>().NodeSizeMultiplier);
+                newNode.transform.position = NewNodePos;
+
                 //create node
             }
         }
