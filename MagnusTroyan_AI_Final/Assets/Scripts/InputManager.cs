@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Dijkstras;
 
 public class InputManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class InputManager : MonoBehaviour
     bool findPath = false;
 
     bool enterUnitPlacingMode = false;
+    NodeList prevPath = new NodeList();
 
     // Start is called before the first frame update
     void Start()
@@ -29,51 +31,51 @@ public class InputManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            RaycastHit[] hits;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Physics.SphereCast(ray, 1.0f, out RaycastHit hit);
             print("click");
-            hits = Physics.RaycastAll(ray);
-            foreach(RaycastHit hit in hits)
+            if (hit.transform.parent.GetComponent<Node>() != null)
             {
-                if (hit.transform.parent.GetComponent<Node>() != null)
+                Node hitNode = hit.transform.parent.GetComponent<Node>();
+                if (enterUnitPlacingMode == true)
                 {
-                    Node hitNode = hit.transform.parent.GetComponent<Node>();
-                    if (enterUnitPlacingMode == true)
+                    hitNode.setWeight(500);
+                    print("changing weight of " + hitNode.name);
+                    //spawn unit on this node
+                    //propogate weights
+                    //also remember red or blue faction
+                }
+                else
+                {
+                    print("hit node " + hit.transform.parent.name);
+                    if (findPath)
                     {
-                        hitNode.setWeight(500);
-                        print("changing weight of " + hitNode.name);
-                        //spawn unit on this node
-                        //propogate weights
-                        //also remember red or blue faction
+                        ClearPath(prevPath);
+                        endNode = hitNode;
+                        prevPath = FindPath(startNode, endNode);
+                        findPath = false;
                     }
                     else
                     {
-                        print("hit node " + hit.transform.parent.name);
-                        if (findPath)
-                        {
-                            endNode = hitNode;
-                            Dijkstras.FindPath(startNode, endNode);
-                            findPath = false;
-                        }
-                        else
-                        {
-                            startNode = hitNode;
-                            findPath = true;
-                        }
-                        break;
+                        startNode = hitNode;
+                        startNode.GetComponentInChildren<MeshRenderer>().material.color = new Color(0, 1, 0);
+                        findPath = true;
                     }
                 }
             }
-          // if (Physics.Raycast(ray, out hit))
-          // {
-          //     
-          //
-          // }
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             enterUnitPlacingMode = !enterUnitPlacingMode;
+        }
+    }
+
+    private void ClearPath(NodeList path)
+    {
+        foreach(NodeRecord record in path)
+        {
+            record.node.GetComponentInChildren<MeshRenderer>().material.color = new Color(1, 1, 1);
         }
     }
 }

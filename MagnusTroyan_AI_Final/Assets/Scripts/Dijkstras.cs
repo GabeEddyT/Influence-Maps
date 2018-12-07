@@ -37,7 +37,13 @@ namespace ExtensionMethods
 }
 
 public class Dijkstras : MonoBehaviour
-{   
+{
+    public static readonly Gradient PathGradient = new Gradient
+    {
+        colorKeys = new GradientColorKey[] { new GradientColorKey(Color.yellow, 0), new GradientColorKey(Color.green, 1) },
+        alphaKeys = new GradientAlphaKey[] { new GradientAlphaKey(1, 0), new GradientAlphaKey(1, 1) }
+    };
+
     public struct Connection
     {
         public Connection(Node from, Node to, float cost = 1) { this.from = from; this.to = to; this.cost = cost; }
@@ -127,11 +133,12 @@ public class Dijkstras : MonoBehaviour
             currentNode = closedList.FindNode(currentNode.connection.from);
         }
 
+        nodesToAdd.Add(startRecord);        
 
         for (int i = 0;  i < nodesToAdd.Count; ++i)
         {
             NodeRecord record = nodesToAdd[i];
-            record.node.GetComponentInChildren<MeshRenderer>().material.color = new Color(i * 1.0f / nodesToAdd.Count, 0, 0);
+            record.node.GetComponentInChildren<MeshRenderer>().material.color = PathGradient.Evaluate(i * 1.0f / (nodesToAdd.Count));
             //store path 
         }
         return nodesToAdd;
