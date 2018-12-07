@@ -6,10 +6,9 @@ public class GenerateGrid : MonoBehaviour
 {
     public Vector2 GridSize;
     public GameObject NodeObjectPrefab;
-    
+    int numNode = 0;
     void Start()
     {
-        Vector2 nodeSpawnLocation = Vector2.zero;
         for (int x = 0; x < GridSize.x; x++)
         {
             for (int y = 0; y < GridSize.y; y++)
@@ -18,7 +17,8 @@ public class GenerateGrid : MonoBehaviour
                 Vector3 NewNodePos = new Vector3(x * NodeObjectPrefab.GetComponent<Node>().NodeSizeMultiplier,
                                                 0, y * NodeObjectPrefab.GetComponent<Node>().NodeSizeMultiplier);
                 newNode.transform.position = NewNodePos;
-
+                newNode.transform.name = "Node " + numNode;
+                numNode++;
                 //create node
             }
         }
@@ -30,7 +30,7 @@ public class GenerateGrid : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         var nodes = FindObjectsOfType<Node>();
-        Dijkstras.FindPath(nodes[9], nodes[600]);
+        Dijkstras.FindPath(nodes[0], nodes[200]);
     }
 
 }

@@ -57,7 +57,7 @@ public class Dijkstras : MonoBehaviour
     public class NodeList : List<NodeRecord> { }
     public class ConnectionList : List<Connection> { }
 
-    public static void FindPath(Node from, Node to)
+    public static NodeList FindPath(Node from, Node to)
     {
         NodeList openList = new NodeList();
         NodeList closedList = new NodeList();
@@ -86,8 +86,8 @@ public class Dijkstras : MonoBehaviour
             foreach (Connection con in connections)
             {
                 Node endNode = con.to;
-                float endNodeCost = currentNode.costSoFar + con.cost;
-
+                float endNodeCost = currentNode.costSoFar + con.cost + endNode.getWeight(); //added get weight which should be set later with the influence map
+               
                 NodeRecord endNodeRecord;
 
                 if (closedList.Contains(endNode))
@@ -132,7 +132,9 @@ public class Dijkstras : MonoBehaviour
         {
             NodeRecord record = nodesToAdd[i];
             record.node.GetComponentInChildren<MeshRenderer>().material.color = new Color(i * 1.0f / nodesToAdd.Count, 0, 0);
+            //store path 
         }
+        return nodesToAdd;
     }
 
     static NodeRecord FindSmallestNode(NodeList nodeRecords)
@@ -150,7 +152,7 @@ public class Dijkstras : MonoBehaviour
     static ConnectionList GetConnections(Node node)
     {
         ConnectionList connections = new ConnectionList();
-        var hits = Physics.OverlapBox(node.transform.position, Vector3.one);
+        var hits = Physics.OverlapBox(node.transform.position, Vector3.one * node.NodeSizeMultiplier);
         foreach(var hit in hits)
         {
             Node hitNode = hit.GetComponentInParent<Node>();

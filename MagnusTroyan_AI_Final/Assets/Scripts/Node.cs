@@ -5,7 +5,7 @@ using UnityEngine;
 public class Node : MonoBehaviour
 {
     [SerializeField]
-    float Weight = 0.0f;
+    float Weight = 0f;
 
     public float NodeSizeMultiplier;
     GameObject gridImage;
@@ -25,8 +25,8 @@ public class Node : MonoBehaviour
     }
 
 
-    float getWeight() { return Weight; }
-    void setWeight(float newWeight)
+    public float getWeight() { return Weight; }
+    public void setWeight(float newWeight)
     {
         Weight = newWeight;
     }
