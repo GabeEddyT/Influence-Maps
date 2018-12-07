@@ -10,6 +10,9 @@ public class InputManager : MonoBehaviour
     Node startNode;
     Node endNode;
     bool findPath = false;
+
+    bool enterUnitPlacingMode = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,19 +37,31 @@ public class InputManager : MonoBehaviour
             {
                 if (hit.transform.parent.GetComponent<Node>() != null)
                 {
-                    print("hit node " + hit.transform.parent.name);
-                    if (findPath)
+                    Node hitNode = hit.transform.parent.GetComponent<Node>();
+                    if (enterUnitPlacingMode == true)
                     {
-                        endNode = hit.transform.parent.GetComponent<Node>();
-                        Dijkstras.FindPath(startNode, endNode);
-                        findPath = false;
+                        hitNode.setWeight(500);
+                        print("changing weight of " + hitNode.name);
+                        //spawn unit on this node
+                        //propogate weights
+                        //also remember red or blue faction
                     }
                     else
                     {
-                        startNode = hit.transform.parent.GetComponent<Node>();
-                        findPath = true;
+                        print("hit node " + hit.transform.parent.name);
+                        if (findPath)
+                        {
+                            endNode = hitNode;
+                            Dijkstras.FindPath(startNode, endNode);
+                            findPath = false;
+                        }
+                        else
+                        {
+                            startNode = hitNode;
+                            findPath = true;
+                        }
+                        break;
                     }
-                    break;
                 }
             }
           // if (Physics.Raycast(ray, out hit))
@@ -54,6 +69,11 @@ public class InputManager : MonoBehaviour
           //     
           //
           // }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            enterUnitPlacingMode = !enterUnitPlacingMode;
         }
     }
 }
