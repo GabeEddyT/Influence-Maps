@@ -56,18 +56,6 @@ public class Dijkstras : MonoBehaviour
     public class NodeList : List<NodeRecord> { }
     public class ConnectionList : List<Connection> { }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public static void FindPath(Node from, Node to)
     {
         NodeList openList = new NodeList();
@@ -87,7 +75,6 @@ public class Dijkstras : MonoBehaviour
         while (openList.Count > 0)
         {
             currentNode = FindSmallestNode(openList);
-
             if (currentNode.node == to)
             {
                 break;
@@ -131,10 +118,19 @@ public class Dijkstras : MonoBehaviour
             closedList.Add(currentNode);
         }
 
-        foreach(NodeRecord record in closedList)
+        NodeList nodesToAdd = new NodeList();
+
+        while (currentNode.node != from)
         {
-            //record.node.GetComponentInChildren<MeshRenderer>().material.color = new Color(1, 0, 0);
-            //Debug.Log(record.node.transform.position);
+            nodesToAdd.Add(currentNode);
+            currentNode = closedList.FindNode(currentNode.connection.from);
+        }
+
+
+        for (int i = 0;  i < nodesToAdd.Count; ++i)
+        {
+            NodeRecord record = nodesToAdd[i];
+            record.node.GetComponentInChildren<MeshRenderer>().material.color = new Color(i * 1.0f / nodesToAdd.Count, 0, 0);
         }
     }
 
@@ -156,13 +152,12 @@ public class Dijkstras : MonoBehaviour
         var hits = Physics.OverlapBox(node.transform.position, Vector3.one);
         foreach(var hit in hits)
         {
-            Node hitNode = hit.GetComponent<Node>();
+            Node hitNode = hit.GetComponentInParent<Node>();
             if (hitNode && hitNode != node)
             {
                 Connection connection = new Connection(node, hitNode);
                 connections.Add(connection);
             }
-            //Debug.Log('g');
         }
 
         return connections;

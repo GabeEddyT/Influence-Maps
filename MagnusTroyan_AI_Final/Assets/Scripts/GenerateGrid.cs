@@ -23,11 +23,14 @@ public class GenerateGrid : MonoBehaviour
             }
         }
 
-        var nodes = FindObjectsOfType<Node>();
-        Debug.Log(nodes.Length);
-        Dijkstras.FindPath(nodes[0], nodes[40]);
+        StartCoroutine(Delayed());
     }
 
-
+    IEnumerator Delayed()
+    {
+        yield return new WaitForEndOfFrame();
+        var nodes = FindObjectsOfType<Node>();
+        Dijkstras.FindPath(nodes[0], nodes[206]);
+    }
 
 }
