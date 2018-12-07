@@ -40,9 +40,10 @@ public class Dijkstras : MonoBehaviour
 {   
     public struct Connection
     {
-        public Connection(Node from, Node to) { this.from = from; this.to = to; }
+        public Connection(Node from, Node to, float cost = 1) { this.from = from; this.to = to; this.cost = cost; }
         public Node from;
         public Node to;
+        public float cost;
     }
 
     public struct NodeRecord
@@ -85,7 +86,7 @@ public class Dijkstras : MonoBehaviour
             foreach (Connection con in connections)
             {
                 Node endNode = con.to;
-                float endNodeCost = currentNode.costSoFar + 1;
+                float endNodeCost = currentNode.costSoFar + con.cost;
 
                 NodeRecord endNodeRecord;
 
@@ -155,7 +156,7 @@ public class Dijkstras : MonoBehaviour
             Node hitNode = hit.GetComponentInParent<Node>();
             if (hitNode && hitNode != node)
             {
-                Connection connection = new Connection(node, hitNode);
+                Connection connection = new Connection(node, hitNode, Vector3.Distance(node.transform.position, hitNode.transform.position));
                 connections.Add(connection);
             }
         }

@@ -30,7 +30,7 @@ public class GenerateGrid : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         var nodes = FindObjectsOfType<Node>();
-        Dijkstras.FindPath(nodes[0], nodes[206]);
+        Dijkstras.FindPath(nodes[9], nodes[600]);
     }
 
 }
