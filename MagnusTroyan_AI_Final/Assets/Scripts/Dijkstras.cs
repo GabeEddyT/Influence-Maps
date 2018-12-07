@@ -1,9 +1,43 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ExtensionMethods;
+
+namespace ExtensionMethods
+{
+    using static Dijkstras;
+    public static class MyExtensions
+    {
+        
+        public static bool Contains(this NodeList list, Node node)
+        {
+            foreach (NodeRecord record in list)
+            {
+                if (record.node == node)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static NodeRecord FindNode(this NodeList list, Node node)
+        {
+            foreach(NodeRecord record in list)
+            {
+                if (record.node == node)
+                {
+                    return record;
+                }
+            }
+            return default;
+        }
+    }
+}
 
 public class Dijkstras : MonoBehaviour
-{
+{   
     public struct Connection
     {
         public Connection(Node from, Node to) { this.from = from; this.to = to; }
@@ -34,7 +68,7 @@ public class Dijkstras : MonoBehaviour
         
     }
 
-    static void FindPath(Node from, Node to)
+    public static void FindPath(Node from, Node to)
     {
         NodeList openList = new NodeList();
         NodeList closedList = new NodeList();
@@ -67,7 +101,40 @@ public class Dijkstras : MonoBehaviour
                 float endNodeCost = currentNode.costSoFar + 1;
 
                 NodeRecord endNodeRecord;
+
+                if (closedList.Contains(endNode))
+                {
+                    continue;
+                }
+                else if(openList.Contains(endNode))
+                {
+                    endNodeRecord = openList.FindNode(endNode);
+
+                    if (endNodeRecord.costSoFar <= endNodeCost)
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    endNodeRecord = new NodeRecord();
+                    endNodeRecord.node = endNode;
+                }
+
+                endNodeRecord.costSoFar = endNodeCost;
+                endNodeRecord.connection = con;
+
+                openList.Add(endNodeRecord);
             }
+
+            openList.Remove(currentNode);
+            closedList.Add(currentNode);
+        }
+
+        foreach(NodeRecord record in closedList)
+        {
+            //record.node.GetComponentInChildren<MeshRenderer>().material.color = new Color(1, 0, 0);
+            //Debug.Log(record.node.transform.position);
         }
     }
 
@@ -95,20 +162,9 @@ public class Dijkstras : MonoBehaviour
                 Connection connection = new Connection(node, hitNode);
                 connections.Add(connection);
             }
+            //Debug.Log('g');
         }
 
         return connections;
-    }
-
-    static bool Contains(NodeList list, Node node)
-    {
-        foreach (NodeRecord record in list)
-        {
-            if (record.node == node)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 }

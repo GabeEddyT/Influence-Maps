@@ -22,6 +22,10 @@ public class GenerateGrid : MonoBehaviour
                 //create node
             }
         }
+
+        var nodes = FindObjectsOfType<Node>();
+        Debug.Log(nodes.Length);
+        Dijkstras.FindPath(nodes[0], nodes[40]);
     }
 
 
