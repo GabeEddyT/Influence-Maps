@@ -36,7 +36,7 @@ namespace ExtensionMethods
     }
 }
 
-public class Dijkstras : MonoBehaviour
+public static class Dijkstras
 {
     public static readonly Gradient PathGradient = new Gradient
     {

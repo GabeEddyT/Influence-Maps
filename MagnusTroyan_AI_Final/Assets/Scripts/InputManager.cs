@@ -32,9 +32,8 @@ public class InputManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            Physics.SphereCast(ray, 1.0f, out RaycastHit hit);
             print("click");
-            if (hit.transform.parent.GetComponent<Node>() != null)
+            if (Physics.SphereCast(ray, 1.0f, out RaycastHit hit) && hit.transform.parent.GetComponent<Node>() != null)
             {
                 Node hitNode = hit.transform.parent.GetComponent<Node>();
                 if (enterUnitPlacingMode == true)
