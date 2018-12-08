@@ -8,6 +8,8 @@ public class InputManager : MonoBehaviour
 {
     public GameObject Structure1;
 
+    GenerateGrid gridGenerator;
+    Node exampleNode;
     Node startNode;
     Node endNode;
     bool findPath = false;
@@ -18,7 +20,8 @@ public class InputManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        gridGenerator = FindObjectOfType<GenerateGrid>();
+        exampleNode = gridGenerator.NodeObjectPrefab.GetComponent<Node>();
     }
 
     // Update is called once per frame
@@ -63,6 +66,35 @@ public class InputManager : MonoBehaviour
                 }
             }
         }
+        else if (Input.GetMouseButton(1))
+        {            
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.SphereCast(ray, 1.0f, out RaycastHit hit))
+            {
+                if (Input.GetKey(KeyCode.LeftControl))
+                {
+                    Node hitNode = hit.transform.parent.GetComponent<Node>();
+                    
+                    if (!hitNode)
+                    {
+                        var node = hit.transform.parent.gameObject.AddComponent<Node>();
+                        node.setWeight(exampleNode.getWeight());
+                        node.NodeSizeMultiplier = exampleNode.NodeSizeMultiplier;
+
+                        // Destroy plane since the node will create a new one.
+                        Destroy(hit.transform.gameObject);
+                    }
+                }
+                else if (hit.transform.parent.GetComponent<Node>() != null)
+                {
+                    Node hitNode = hit.transform.parent.GetComponent<Node>();
+                    hit.transform.GetComponent<MeshRenderer>().material.color = new Color(0, 0, 0);
+                    Destroy(hitNode);
+                }
+            }
+           
+
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -74,7 +106,8 @@ public class InputManager : MonoBehaviour
     {
         foreach(NodeRecord record in path)
         {
-            record.node.GetComponentInChildren<MeshRenderer>().material.color = new Color(1, 1, 1);
+            if (record.node)
+                record.node.GetComponentInChildren<MeshRenderer>().material.color = new Color(1, 1, 1);
         }
     }
 }
