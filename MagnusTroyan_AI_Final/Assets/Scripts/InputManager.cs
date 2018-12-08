@@ -50,7 +50,7 @@ public class InputManager : MonoBehaviour
                 else
                 {
                     print("hit node " + hit.transform.parent.name);
-                    if (findPath)
+                    if (findPath && startNode)
                     {
                         ClearPath(prevPath);
                         endNode = hitNode;
