@@ -5,7 +5,13 @@ using static Dijkstras;
 
 public class Influencer : MonoBehaviour
 {
-    public static void PropagateInfluence(Node node, float strength)
+    readonly public static Gradient InfluenceGradient = new Gradient
+    {
+        colorKeys = new GradientColorKey[] { new GradientColorKey(Color.red, 0), new GradientColorKey(Color.black, .5f), new GradientColorKey(Color.blue, 1) },
+        alphaKeys = new GradientAlphaKey[] { new GradientAlphaKey(1, 0), new GradientAlphaKey(1, 1) }
+    };
+
+    public static void PropagateInfluence(Node node, float strength, float team = 1)
     {
         float Normalize(float x)
         { return (x / strength); }
@@ -14,7 +20,13 @@ public class Influencer : MonoBehaviour
         foreach (var hit in hits)
         {
             Node myNode = hit.GetComponentInParent<Node>();
-            myNode.setWeight( Normalize (strength - Vector3.Distance(myNode.transform.position, node.transform.position)));
+            myNode.setWeight( Normalize (strength - Vector3.Distance(myNode.transform.position, node.transform.position)) * team);
+            hit.GetComponent<MeshRenderer>().material.color = Eval(myNode.getWeight());
         }
+    }
+
+    public static Color Eval(float val)
+    {
+        return InfluenceGradient.Evaluate(val / 2 + .5f);
     }
 }

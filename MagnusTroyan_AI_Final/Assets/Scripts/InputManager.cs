@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Dijkstras;
+using static Influencer;
 
 public class InputManager : MonoBehaviour
 {
@@ -98,6 +99,27 @@ public class InputManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             enterUnitPlacingMode = !enterUnitPlacingMode;
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if(Physics.SphereCast(ray, 1.0f, out RaycastHit hit) && hit.transform.parent.GetComponent<Node>() != null)
+            {
+                PropagateInfluence(hit.transform.parent.GetComponent<Node>(), 5.0f);
+            }
+
+        }
+        else if (Input.GetKeyDown(KeyCode.O))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.SphereCast(ray, 1.0f, out RaycastHit hit) && hit.transform.parent.GetComponent<Node>() != null)
+            {
+                PropagateInfluence(hit.transform.parent.GetComponent<Node>(), 5.0f, -1);
+            }
+
         }
     }
 
