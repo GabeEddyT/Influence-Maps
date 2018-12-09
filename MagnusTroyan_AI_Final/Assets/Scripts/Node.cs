@@ -19,6 +19,11 @@ public class Node : MonoBehaviour
         ResetPlaneLocation();
     }
 
+    private void Update()
+    {
+        GetComponentInChildren<MeshRenderer>().material.color = Influencer.Eval(Weight);
+    }
+
     public void ResetPlaneLocation()
     {
         gridImage.transform.localPosition = Vector3.zero;   

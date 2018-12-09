@@ -7,7 +7,7 @@ public class Influencer : MonoBehaviour
 {
     readonly public static Gradient InfluenceGradient = new Gradient
     {
-        colorKeys = new GradientColorKey[] { new GradientColorKey(Color.red, 0), new GradientColorKey(Color.black, .5f), new GradientColorKey(Color.blue, 1) },
+        colorKeys = new GradientColorKey[] { new GradientColorKey(Color.red, 0), new GradientColorKey(Color.white, .5f), new GradientColorKey(Color.blue, 1) },
         alphaKeys = new GradientAlphaKey[] { new GradientAlphaKey(1, 0), new GradientAlphaKey(1, 1) }
     };
 

@@ -172,4 +172,17 @@ public static class Dijkstras
 
         return connections;
     }
+
+    public static void ColorPath(NodeList path)
+    {
+        int i = 0;
+        foreach(NodeRecord record in path)
+        {
+            if (record.node)
+            {
+                record.node.GetComponentInChildren<MeshRenderer>().material.color = PathGradient.Evaluate(i * 1.0f / (path.Count));
+            }
+            i++;
+        }
+    }
 }

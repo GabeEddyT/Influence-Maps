@@ -31,6 +31,15 @@ public class InputManager : MonoBehaviour
         GetInput();
     }
 
+    private void LateUpdate()
+    {
+        ColorPath(prevPath);
+        if (startNode)
+        {
+            startNode.GetComponentInChildren<MeshRenderer>().material.color = new Color(0, 1, 0);
+        }
+    }
+
     private void GetInput()
     {
         if (Input.GetMouseButtonDown(0))
