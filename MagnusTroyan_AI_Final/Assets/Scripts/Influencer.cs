@@ -21,7 +21,7 @@ public class Influencer : MonoBehaviour
         {
             Node myNode = hit.GetComponentInParent<Node>();
             if (!myNode) continue;
-            myNode.setWeight( Normalize (strength - Vector3.Distance(myNode.transform.position, node.transform.position)) * team + myNode.getWeight());
+            myNode.setWeight( Normalize (strength - Mathf.Clamp(Vector3.Distance(myNode.transform.position, node.transform.position),0,strength)) * team + myNode.getWeight());
             hit.GetComponent<MeshRenderer>().material.color = Eval(myNode.getWeight());
         }
     }
