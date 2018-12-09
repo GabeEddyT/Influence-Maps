@@ -20,7 +20,8 @@ public class Influencer : MonoBehaviour
         foreach (var hit in hits)
         {
             Node myNode = hit.GetComponentInParent<Node>();
-            myNode.setWeight( Normalize (strength - Vector3.Distance(myNode.transform.position, node.transform.position)) * team);
+            if (!myNode) continue;
+            myNode.setWeight( Normalize (strength - Vector3.Distance(myNode.transform.position, node.transform.position)) * team + myNode.getWeight());
             hit.GetComponent<MeshRenderer>().material.color = Eval(myNode.getWeight());
         }
     }
