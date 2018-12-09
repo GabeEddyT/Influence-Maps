@@ -91,8 +91,7 @@ public class InputManager : MonoBehaviour
                     hit.transform.GetComponent<MeshRenderer>().material.color = new Color(0, 0, 0);
                     Destroy(hitNode);
                 }
-            }
-           
+            }           
 
         }
 
