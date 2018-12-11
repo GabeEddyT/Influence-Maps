@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Dijkstras;
 using static Influencer;
+using UnityEngine.SceneManagement;
 
 public class InputManager : MonoBehaviour
 {
@@ -142,7 +143,7 @@ public class InputManager : MonoBehaviour
 
             if(Physics.SphereCast(ray, 1.0f, out RaycastHit hit) && hit.transform.parent.GetComponent<Node>() != null)
             {
-                PropagateInfluence(hit.transform.parent.GetComponent<Node>(), 5.0f);
+                PropagateInfluence(hit.transform.parent.GetComponent<Node>(), 25.0f);
             }
 
         }
@@ -152,10 +153,14 @@ public class InputManager : MonoBehaviour
 
             if (Physics.SphereCast(ray, 1.0f, out RaycastHit hit) && hit.transform.parent.GetComponent<Node>() != null)
             {
-                PropagateInfluence(hit.transform.parent.GetComponent<Node>(), 5.0f, -1);
+                PropagateInfluence(hit.transform.parent.GetComponent<Node>(), 25.0f, -1);
             }
 
         }
+		if (Input.GetKeyDown(KeyCode.R))
+		{
+			SceneManager.LoadScene(0);
+		}
     }
 
     private void ClearPath(NodeList path)
