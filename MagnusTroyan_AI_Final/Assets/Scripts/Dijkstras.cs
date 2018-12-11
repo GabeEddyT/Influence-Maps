@@ -156,7 +156,7 @@ public static class Dijkstras
         return smallest;
     }
 
-    static ConnectionList GetConnections(Node node)
+    public static ConnectionList GetConnections(Node node)
     {
         ConnectionList connections = new ConnectionList();
         var hits = Physics.OverlapBox(node.transform.position, Vector3.one * node.NodeSizeMultiplier);
