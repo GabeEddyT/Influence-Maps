@@ -25,7 +25,8 @@ public class Influencer : MonoBehaviour
         Dictionary <Node, float> weightList = new Dictionary<Node, float>();
 
         open.Add(node);
-        node.setWeight(team + node.getWeight());
+        float initWeight = node.getWeight();
+        node.setWeight(team);
 
         while (open.Count > 0)
         {
@@ -42,10 +43,12 @@ public class Influencer : MonoBehaviour
                     closed.Add(connection.to);
                     weightList.Add(connection.to, connection.to.getWeight());
                     if(!open.Contains(connection.to)) open.Add(connection.to);
-                    connection.to.setWeight(myNode.getWeight() * Normalize(strength - Vector3.Distance(node.transform.position, connection.to.transform.position)));                                
+                    connection.to.setWeight(myNode.getWeight() * Normalize(strength - Mathf.Clamp(Vector3.Distance(node.transform.position, connection.to.transform.position), 0, strength)));                                
                 }
             }
         }
+
+        node.setWeight(initWeight + node.getWeight());
 
         foreach(var myPair in weightList)
         {
