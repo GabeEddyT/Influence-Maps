@@ -6,6 +6,7 @@ using ExtensionMethods;
 
 namespace ExtensionMethods
 {
+
     using static Dijkstras;
     public static class MyExtensions
     {
@@ -38,7 +39,8 @@ namespace ExtensionMethods
 
 public static class Dijkstras
 {
-    public static readonly Gradient PathGradient = new Gradient
+
+	public static readonly Gradient PathGradient = new Gradient
     {
         colorKeys = new GradientColorKey[] { new GradientColorKey(Color.yellow, 0), new GradientColorKey(Color.green, 1) },
         alphaKeys = new GradientAlphaKey[] { new GradientAlphaKey(1, 0), new GradientAlphaKey(1, 1) }
@@ -63,69 +65,213 @@ public static class Dijkstras
     public class NodeList : List<NodeRecord> { }
     public class ConnectionList : List<Connection> { }
 
-    public static NodeList FindPath(Node from, Node to)
-    {
-        NodeList openList = new NodeList();
-        NodeList closedList = new NodeList();
-        ConnectionList connections = new ConnectionList();
+	public static NodeList FindPathWithMaxWeight(Node from, Node to, float maxWeight)
+	{
+		bool isValidPath = false;
 
-        NodeRecord startRecord = new NodeRecord
-        {
-            node = from,
-            costSoFar = 0
-        };
+		NodeList openList = new NodeList();
+		NodeList closedList = new NodeList();
+		ConnectionList connections = new ConnectionList();
 
-        openList.Add(startRecord);
+		NodeList nodesToAdd = new NodeList();
 
-        NodeRecord currentNode = new NodeRecord();
+		NodeRecord startRecord = new NodeRecord
+		{
+			node = from,
+			costSoFar = 0
+		};
 
-        while (openList.Count > 0)
-        {
-            currentNode = FindSmallestNode(openList);
-            if (currentNode.node == to)
-            {
-                break;
-            }
+		openList.Add(startRecord);
 
-            connections = GetConnections(currentNode.node);
+		NodeRecord currentNode = new NodeRecord();
 
-            foreach (Connection con in connections)
-            {
-                Node endNode = con.to;
-                float endNodeCost = currentNode.costSoFar + con.cost + endNode.getWeight(); //added get weight which should be set later with the influence map
-               
-                NodeRecord endNodeRecord;
+		while (openList.Count > 0)
+		{
+			currentNode = FindSmallestNode(openList);
+			if (currentNode.node == to)
+			{
+				break;
+			}
 
-                if (closedList.Contains(endNode))
-                {
-                    continue;
-                }
-                else if(openList.Contains(endNode))
-                {
-                    endNodeRecord = openList.FindNode(endNode);
+			connections = GetConnections(currentNode.node);
 
-                    if (endNodeRecord.costSoFar <= endNodeCost)
-                    {
-                        continue;
-                    }
-                }
-                else
-                {
-                    endNodeRecord = new NodeRecord();
-                    endNodeRecord.node = endNode;
-                }
+			foreach (Connection con in connections)
+			{
+				Node endNode = con.to;
 
-                endNodeRecord.costSoFar = endNodeCost;
-                endNodeRecord.connection = con;
+				if (endNode.getWeight() > maxWeight) //avoid repulsive influence and walls
+				{
+					continue;
+				}
 
-                openList.Add(endNodeRecord);
-            }
+				float endWeight = Mathf.Max(maxWeight, endNode.getWeight()); //if no path is found, increase the max and try again.
+				float endNodeCost = currentNode.costSoFar + con.cost + endWeight; //added get weight which should be set later with the influence map
 
-            openList.Remove(currentNode);
-            closedList.Add(currentNode);
-        }
+				NodeRecord endNodeRecord;
 
-        NodeList nodesToAdd = new NodeList();
+				if (closedList.Contains(endNode))
+				{
+					continue;
+				}
+				else if (openList.Contains(endNode))
+				{
+					//if (endNode.getWeight() > 0f)
+					//{
+					//	continue;
+					//}
+					endNodeRecord = openList.FindNode(endNode);
+
+					if (endNodeRecord.costSoFar <= endNodeCost)
+					{
+						continue;
+					}
+				}
+				else
+				{
+					endNodeRecord = new NodeRecord();
+					endNodeRecord.node = endNode;
+				}
+
+				endNodeRecord.costSoFar = endNodeCost;
+				endNodeRecord.connection = con;
+
+				openList.Add(endNodeRecord);
+			}
+
+			openList.Remove(currentNode);
+			closedList.Add(currentNode);
+		}
+
+		//if (closedList.Contains(to))
+		//{
+		//	isValidPath = true;
+		//}
+		//else
+		//{
+		//	//restart pathfinding
+		//	maxPassableWeight += .1f;
+		//	if (maxPassableWeight > 5f)
+		//	{
+		//		isValidPath = true;
+		//	}
+		//	
+		//}
+
+		nodesToAdd = new NodeList();
+
+		while (currentNode.node != from)
+		{
+			nodesToAdd.Add(currentNode);
+			currentNode = closedList.FindNode(currentNode.connection.from);
+		}
+
+		nodesToAdd.Add(startRecord);
+
+		for (int i = 0; i < nodesToAdd.Count; ++i)
+		{
+			NodeRecord record = nodesToAdd[i];
+			record.node.GetComponentInChildren<MeshRenderer>().material.color = PathGradient.Evaluate(i * 1.0f / (nodesToAdd.Count));
+			//store path 
+		}
+
+
+		return nodesToAdd;
+	}
+
+	public static NodeList FindPath(Node from, Node to)
+	{
+		bool isValidPath = false;
+		float maxPassableWeight = 0.5f;
+
+		NodeList openList = new NodeList();
+		NodeList closedList = new NodeList();
+		ConnectionList connections = new ConnectionList();
+
+		NodeList nodesToAdd = new NodeList();
+
+		NodeRecord startRecord = new NodeRecord
+		{
+			node = from,
+			costSoFar = 0
+		};
+
+		openList.Add(startRecord);
+
+		NodeRecord currentNode = new NodeRecord();
+
+		while (openList.Count > 0)
+		{
+			currentNode = FindSmallestNode(openList);
+			if (currentNode.node == to)
+			{
+				break;
+			}
+
+			connections = GetConnections(currentNode.node);
+
+			foreach (Connection con in connections)
+			{
+				Node endNode = con.to;
+
+				if (endNode.getWeight() > maxPassableWeight) //avoid repulsive influence and walls
+				{
+					continue;
+				}
+
+				float endWeight = Mathf.Max(maxPassableWeight, endNode.getWeight()); //if no path is found, increase the max and try again.
+				float endNodeCost = currentNode.costSoFar + con.cost + endWeight; //added get weight which should be set later with the influence map
+
+				NodeRecord endNodeRecord;
+
+				if (closedList.Contains(endNode))
+				{
+					continue;
+				}
+				else if (openList.Contains(endNode))
+				{
+					//if (endNode.getWeight() > 0f)
+					//{
+					//	continue;
+					//}
+					endNodeRecord = openList.FindNode(endNode);
+
+					if (endNodeRecord.costSoFar <= endNodeCost)
+					{
+						continue;
+					}
+				}
+				else
+				{
+					endNodeRecord = new NodeRecord();
+					endNodeRecord.node = endNode;
+				}
+
+				endNodeRecord.costSoFar = endNodeCost;
+				endNodeRecord.connection = con;
+
+				openList.Add(endNodeRecord);
+			}
+
+			openList.Remove(currentNode);
+			closedList.Add(currentNode);
+		}
+
+		//if (closedList.Contains(to))
+		//{
+		//	isValidPath = true;
+		//}
+		//else
+		//{
+		//	//restart pathfinding
+		//	maxPassableWeight += .1f;
+		//	if (maxPassableWeight > 5f)
+		//	{
+		//		isValidPath = true;
+		//	}
+		//	
+		//}
+
+        nodesToAdd = new NodeList();
 
         while (currentNode.node != from)
         {
@@ -141,6 +287,8 @@ public static class Dijkstras
             record.node.GetComponentInChildren<MeshRenderer>().material.color = PathGradient.Evaluate(i * 1.0f / (nodesToAdd.Count));
             //store path 
         }
+	
+		
         return nodesToAdd;
     }
 
