@@ -5,6 +5,7 @@ using UnityEngine;
 using static Dijkstras;
 using static Influencer;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class InputManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class InputManager : MonoBehaviour
 
     bool enterUnitPlacingMode = false;
     NodeList prevPath = new NodeList();
-
+    GameObject textTransform;
     static float multiplier = 5.0f;
 
     // Start is called before the first frame update
@@ -26,12 +27,15 @@ public class InputManager : MonoBehaviour
     {
         gridGenerator = FindObjectOfType<GenerateGrid>();
         exampleNode = gridGenerator.NodeObjectPrefab.GetComponent<Node>();
+        textTransform = Camera.main.GetComponentInChildren<Text>().gameObject;
+        textTransform.GetComponent<Text>().enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         GetInput();
+        textTransform.GetComponent<RectTransform>().position = Input.mousePosition + Vector3.left * textTransform.GetComponent<Text>().fontSize;
     }
 
     private void LateUpdate()
@@ -135,14 +139,19 @@ public class InputManager : MonoBehaviour
 
         }
 
-        if(Input.mouseScrollDelta.y > 0)
+        if (Input.mouseScrollDelta.y != 0)
         {
-            multiplier += multiplier < 25 ? 1: 0;
-        }
-        else if(Input.mouseScrollDelta.y < 0)
-        {
-            multiplier -= multiplier > 0 ? 1 : 0;
-        }
+            if (Input.mouseScrollDelta.y > 0)
+            {
+                multiplier += multiplier < 25 ? 1 : 0;
+            }
+            else if (Input.mouseScrollDelta.y < 0)
+            {
+                multiplier -= multiplier > 0 ? 1 : 0;
+            }
+            StopAllCoroutines();
+            StartCoroutine(PreviewRadius());
+        }        
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -173,6 +182,14 @@ public class InputManager : MonoBehaviour
 		{
 			SceneManager.LoadScene(0);
 		}
+    }
+
+    IEnumerator PreviewRadius()
+    {
+        textTransform.GetComponent<Text>().text = multiplier + "";
+        textTransform.GetComponent<Text>().enabled = true;        
+        yield return new WaitForSeconds(1);
+        textTransform.GetComponent<Text>().enabled = false;
     }
 
     private void ClearPath(NodeList path)
