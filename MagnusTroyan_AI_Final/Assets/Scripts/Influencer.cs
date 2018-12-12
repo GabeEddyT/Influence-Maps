@@ -28,6 +28,10 @@ public class Influencer : MonoBehaviour
         float initWeight = node.getWeight();
         node.setWeight(team);
 
+        Dictionary<Node, int> depthMap = new Dictionary<Node, int>();
+
+        depthMap.Add(node, 0);
+
         while (open.Count > 0)
         {
             var myNode = open[0];
@@ -40,10 +44,12 @@ public class Influencer : MonoBehaviour
             {
                 if(!closed.Contains(connection.to) && Vector3.Distance(connection.to.transform.position, node.transform.position) < strength)
                 {
+                    int depth = depthMap[myNode] + 1;
+                    depthMap[connection.to] = depth;
                     closed.Add(connection.to);
                     weightList.Add(connection.to, connection.to.getWeight());
                     if(!open.Contains(connection.to)) open.Add(connection.to);
-                    connection.to.setWeight(myNode.getWeight() * Normalize(strength - Mathf.Clamp(Vector3.Distance(node.transform.position, connection.to.transform.position), 0, strength)));                                
+                    connection.to.setWeight(myNode.getWeight() * Mathf.Pow(Mathf.Abs(Normalize(strength - (depth * myNode.NodeSizeMultiplier))),.5f));                                
                 }
             }
         }
@@ -74,6 +80,6 @@ public class Influencer : MonoBehaviour
 
     public static Color Eval(float val)
     {
-        return InfluenceGradient.Evaluate(val / 2 + .5f);
+        return InfluenceGradient.Evaluate(Mathf.Sign(val) * Mathf.Pow(Mathf.Abs(val),.5f) / 2 + .5f);
     }
 }
