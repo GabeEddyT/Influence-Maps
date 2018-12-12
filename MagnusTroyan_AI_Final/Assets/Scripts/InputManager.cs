@@ -19,6 +19,8 @@ public class InputManager : MonoBehaviour
     bool enterUnitPlacingMode = false;
     NodeList prevPath = new NodeList();
 
+    static float multiplier = 5.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -133,6 +135,15 @@ public class InputManager : MonoBehaviour
 
         }
 
+        if(Input.mouseScrollDelta.y > 0)
+        {
+            multiplier += multiplier < 25 ? 1: 0;
+        }
+        else if(Input.mouseScrollDelta.y < 0)
+        {
+            multiplier -= multiplier > 0 ? 1 : 0;
+        }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             enterUnitPlacingMode = !enterUnitPlacingMode;
@@ -144,7 +155,7 @@ public class InputManager : MonoBehaviour
 
             if(Physics.SphereCast(ray, 1.0f, out RaycastHit hit) && hit.transform.parent.GetComponent<Node>() != null)
             {
-                PropagateInfluence(hit.transform.parent.GetComponent<Node>(), 25.0f);
+                PropagateInfluence(hit.transform.parent.GetComponent<Node>(), multiplier);
             }
 
         }
@@ -154,7 +165,7 @@ public class InputManager : MonoBehaviour
 
             if (Physics.SphereCast(ray, 1.0f, out RaycastHit hit) && hit.transform.parent.GetComponent<Node>() != null)
             {
-                PropagateInfluence(hit.transform.parent.GetComponent<Node>(), 25.0f, -1);
+                PropagateInfluence(hit.transform.parent.GetComponent<Node>(), multiplier, -1);
             }
 
         }
