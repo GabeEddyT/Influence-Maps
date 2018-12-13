@@ -15,6 +15,9 @@ public class Node : MonoBehaviour
     public Material frownMat;
     public Material smileMat;
 
+    public Material wallMat;
+
+
 void Start()
     {
         gridImage = GameObject.CreatePrimitive(PrimitiveType.Plane);
@@ -43,7 +46,7 @@ void Start()
                 var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 cube.tag = "Border";
                 DestroyImmediate(cube.GetComponent<Collider>());
-                cube.GetComponent<MeshRenderer>().material.color = Color.magenta * .5f;
+                Material standardShaderMaterial = cube.GetComponent<MeshRenderer>().material = wallMat;
                 cube.transform.position = Vector3.Lerp(transform.position, connection.to.transform.position, .5f);
                 cube.transform.localScale = Vector3.one * .2f;
                 cube.transform.LookAt(connection.to.transform);

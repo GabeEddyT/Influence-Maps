@@ -171,8 +171,9 @@ public class InputManager : MonoBehaviour
                 else if (hit.transform.parent.GetComponent<Node>() != null)
                 {
                     Node hitNode = hit.transform.parent.GetComponent<Node>();
-                    hit.transform.GetComponent<MeshRenderer>().material.color = new Color(0, 0, 0);
+                    hitNode.StopAllCoroutines();
                     Destroy(hitNode);
+                    hit.transform.GetComponent<MeshRenderer>().material.color = new Color(0, 0, 0,1);
                 }
             }           
 

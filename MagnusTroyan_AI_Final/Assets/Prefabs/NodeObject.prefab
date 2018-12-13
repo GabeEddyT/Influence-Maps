@@ -49,3 +49,4 @@ MonoBehaviour:
   team: 0
   frownMat: {fileID: 2100000, guid: 86d3249387b1e77499dd4eeef96add4d, type: 2}
   smileMat: {fileID: 2100000, guid: 3ffa6434a77d9a7499137c6141de78c3, type: 2}
+  wallMat: {fileID: 2100000, guid: 48737ff752a57ec49989598639acf459, type: 2}
