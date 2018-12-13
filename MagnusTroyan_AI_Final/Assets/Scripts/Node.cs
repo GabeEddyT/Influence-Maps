@@ -19,10 +19,13 @@ void Start()
         // Invoke("ResetPlaneLocation", .4f);
         ResetPlaneLocation();
     }
-
+    bool inside = false;
     private void Update()
     {
-        GetComponentInChildren<MeshRenderer>().material.color = Influencer.Eval(Weight);      
+        if (!inside)
+        {
+            GetComponentInChildren<MeshRenderer>().material.color = Influencer.Eval(Weight);
+        }
     }
 
     public void Refresh()
@@ -43,6 +46,26 @@ void Start()
                 //Destroy(cube, 1f);
             }
         }
+    }
+
+    public void Colorize(Color color)
+    {
+        StopAllCoroutines();
+        StartCoroutine(ColorizeRoutine(color));
+    }
+
+    public IEnumerator ColorizeRoutine(Color color)
+    {
+        inside = true;
+        float time = 0;
+        var rend = GetComponentInChildren<MeshRenderer>();
+        while (time < 5)
+        {
+            rend.material.color = Color.Lerp(rend.material.color, color, time / 5);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        inside = false;
     }
 
     public void ResetPlaneLocation()

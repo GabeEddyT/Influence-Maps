@@ -63,13 +63,14 @@ public class Influencer : MonoBehaviour
             myNode.setWeight(myWeight + myNode.getWeight());
         }
 
-        //foreach(var myNode in closed)
-        //{
-        //    if (!myNode) continue;
-        //    myNode.GetComponentInChildren<MeshRenderer>().material.color = Eval(myNode.getWeight());
-        //}
-        InputManager instance = FindObjectOfType<InputManager>();
-        instance.CallColorize(closed);
+        foreach (var myNode in closed)
+        {
+            if (!myNode) continue;
+            myNode.Colorize(Eval(myNode.getWeight()));
+        }
+
+        //InputManager instance = FindObjectOfType<InputManager>();
+        //instance.CallColorize(closed);
 
         //foreach (var hit in hits)
         //{
