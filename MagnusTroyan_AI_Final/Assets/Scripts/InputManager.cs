@@ -75,30 +75,39 @@ public class InputManager : MonoBehaviour
 						bool foundPathWithMaxWeight = false;
 						float maxWeight = 0f;
 
-                        // prevPath = FindPath(startNode, endNode);
+                       // prevPath = FindPath(startNode, endNode);
 
-                        //while (foundPathWithMaxWeight == false)
-                        //{
-                        //	prevPath = FindPathWithMaxWeight(startNode, endNode, maxWeight);
-                        //	int last = prevPath.Count - 1;
+                       while (foundPathWithMaxWeight == false)
+                       {
+                            if (maxWeight >= .3f)
+                            {
+                                foundPathWithMaxWeight = true;
+                                break;
+                            }
+                       	prevPath = FindPathWithMaxWeight(startNode, endNode, maxWeight);
+                       	int last = prevPath.Count - 1;
 
-                        //	foreach(NodeRecord record in prevPath)
-                        //	{
-                        //		if (record.node == endNode)
-                        //		{
-                        //			//prevPath = FindPath(startNode, endNode);
-                        //			foundPathWithMaxWeight = true;
-                        //			break;
-                        //		}
-                        //	}
-                        //	if (!foundPathWithMaxWeight)
-                        //		{
-                        //			prevPath.Clear();
-                        //			maxWeight += .1f;
-                        //		}
-                        //}
-                        prevPath = FindPath(startNode, endNode);
-
+                       	foreach(NodeRecord record in prevPath)
+                       	{
+                       		if (record.node == endNode)
+                       		{
+                       			//prevPath = FindPath(startNode, endNode);
+                       			foundPathWithMaxWeight = true;
+                       			break;
+                       		}
+                       	}
+                       	if (!foundPathWithMaxWeight)
+                       		{
+                       			prevPath.Clear();
+                                maxWeight += .1f;
+                               // foundPathWithMaxWeight = true;
+                             //   break;
+                       		}
+                       }
+                        if (maxWeight >= .3f)
+                        {
+                            prevPath = FindPath(startNode, endNode);
+                        }
 						findPath = false;
                     }
                     else
