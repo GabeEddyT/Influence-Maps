@@ -166,7 +166,7 @@ public class InputManager : MonoBehaviour
             {
                 PropagateInfluence(hit.transform.parent.GetComponent<Node>(), multiplier);
             }
-
+            RefreshBorder();
         }
         else if (Input.GetKeyDown(KeyCode.O))
         {
@@ -176,7 +176,7 @@ public class InputManager : MonoBehaviour
             {
                 PropagateInfluence(hit.transform.parent.GetComponent<Node>(), multiplier, -1);
             }
-
+            RefreshBorder();
         }
 		if (Input.GetKeyDown(KeyCode.R))
 		{
@@ -190,6 +190,18 @@ public class InputManager : MonoBehaviour
         textTransform.GetComponent<Text>().enabled = true;        
         yield return new WaitForSeconds(1);
         textTransform.GetComponent<Text>().enabled = false;
+    }
+
+    void RefreshBorder()
+    {
+        foreach(var border in GameObject.FindGameObjectsWithTag("Border"))
+        {
+            Destroy(border);
+        }
+        foreach (var node in FindObjectsOfType<Node>())
+        {
+            node.Refresh();
+        }
     }
 
     private void ClearPath(NodeList path)
