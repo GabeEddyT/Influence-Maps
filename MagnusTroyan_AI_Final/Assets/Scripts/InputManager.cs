@@ -21,6 +21,12 @@ public class InputManager : MonoBehaviour
     NodeList prevPath = new NodeList();
     GameObject textTransform;
     static float multiplier = 5.0f;
+    public InputManager Singleton;
+
+    private void Awake()
+    {
+        Singleton = this;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +50,30 @@ public class InputManager : MonoBehaviour
         if (startNode)
         {
             startNode.GetComponentInChildren<MeshRenderer>().material.color = new Color(0, 1, 0);
+        }
+    }
+
+    public void CallColorize(NodeArray list)
+    {
+        StartCoroutine(Colorize(list));
+    }
+
+    public IEnumerator Colorize(NodeArray list)
+    {
+        yield return null;
+        float waitTime = 0;
+        while (list.Count > 0)
+        {
+            if (waitTime > 2)
+            {
+                var node = list[0];
+                node.GetComponentInChildren<MeshRenderer>().material.color = Eval(node.getWeight());
+                list.Remove(node);
+                
+                yield return new WaitForSecondsRealtime(2);
+                waitTime = 0;
+            }
+            waitTime += Time.deltaTime;
         }
     }
 

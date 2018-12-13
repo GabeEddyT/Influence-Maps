@@ -11,7 +11,7 @@ public class Influencer : MonoBehaviour
         alphaKeys = new GradientAlphaKey[] { new GradientAlphaKey(1, 0), new GradientAlphaKey(1, 1) }
     };
 
-    class NodeArray : List<Node> { }
+    public class NodeArray : List<Node> { }
 
     public static void PropagateInfluence(Node node, float strength, float team = 1)
     {
@@ -63,11 +63,13 @@ public class Influencer : MonoBehaviour
             myNode.setWeight(myWeight + myNode.getWeight());
         }
 
-        foreach(var myNode in closed)
-        {
-            if (!myNode) continue;
-            myNode.GetComponentInChildren<MeshRenderer>().material.color = Eval(myNode.getWeight());
-        }
+        //foreach(var myNode in closed)
+        //{
+        //    if (!myNode) continue;
+        //    myNode.GetComponentInChildren<MeshRenderer>().material.color = Eval(myNode.getWeight());
+        //}
+        InputManager instance = FindObjectOfType<InputManager>();
+        instance.CallColorize(closed);
 
         //foreach (var hit in hits)
         //{
