@@ -203,7 +203,27 @@ public class InputManager : MonoBehaviour
 
             if(Physics.SphereCast(ray, 1.0f, out RaycastHit hit) && hit.transform.parent.GetComponent<Node>() != null)
             {
-                PropagateInfluence(hit.transform.parent.GetComponent<Node>(), multiplier);
+                if (hit.transform.parent.GetComponent<Node>().isOccupiedByUnit == true)
+                {
+                    if (hit.transform.parent.GetComponent<Node>().team == 1)
+                    { 
+                    }
+                    else
+                    {
+                        hit.transform.parent.GetComponent<Node>().isOccupiedByUnit = true;
+                        hit.transform.parent.GetComponent<Node>().SetTeam(1);//blue
+                        PropagateInfluence(hit.transform.parent.GetComponent<Node>(), multiplier);
+                    }
+                }
+                else
+                {
+                    hit.transform.parent.GetComponent<Node>().isOccupiedByUnit = true;
+                    hit.transform.parent.GetComponent<Node>().SetTeam(1);//blue
+                    PropagateInfluence(hit.transform.parent.GetComponent<Node>(), multiplier);
+                }
+              //  PropagateInfluence(hit.transform.parent.GetComponent<Node>(), multiplier);
+              //  hit.transform.parent.GetComponent<Node>().isOccupiedByUnit = true;
+              //  hit.transform.parent.GetComponent<Node>().team = 1;//blue
             }
             RefreshBorder();
         }
@@ -213,7 +233,28 @@ public class InputManager : MonoBehaviour
 
             if (Physics.SphereCast(ray, 1.0f, out RaycastHit hit) && hit.transform.parent.GetComponent<Node>() != null)
             {
-                PropagateInfluence(hit.transform.parent.GetComponent<Node>(), multiplier, -1);
+
+                if (hit.transform.parent.GetComponent<Node>().isOccupiedByUnit == true)
+                {
+                    if (hit.transform.parent.GetComponent<Node>().team == -1)
+                    {
+                    }
+                    else
+                    {
+                        hit.transform.parent.GetComponent<Node>().isOccupiedByUnit = true;
+                        hit.transform.parent.GetComponent<Node>().SetTeam(-1);//red
+                        PropagateInfluence(hit.transform.parent.GetComponent<Node>(), multiplier, -1);
+                    }
+                }
+                else
+                {
+                    hit.transform.parent.GetComponent<Node>().isOccupiedByUnit = true;
+                    hit.transform.parent.GetComponent<Node>().SetTeam(-1);//red
+                    PropagateInfluence(hit.transform.parent.GetComponent<Node>(), multiplier, -1);
+                }
+                //  PropagateInfluence(hit.transform.parent.GetComponent<Node>(), multiplier);
+                //  hit.transform.parent.GetComponent<Node>().isOccupiedByUnit = true;
+                //  hit.transform.parent.GetComponent<Node>().team = 1;//blue
             }
             RefreshBorder();
         }
