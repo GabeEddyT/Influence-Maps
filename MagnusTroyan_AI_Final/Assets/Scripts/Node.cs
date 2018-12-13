@@ -9,6 +9,11 @@ public class Node : MonoBehaviour
 
     public float NodeSizeMultiplier;
     GameObject gridImage;
+    public bool isOccupiedByUnit = false;
+    public int team = 0; //1 is blue, -1 is red
+
+    public Material frownMat;
+    public Material smileMat;
 
 void Start()
     {
@@ -50,7 +55,30 @@ void Start()
         gridImage.transform.localPosition = Vector3.zero;   
     }
 
+    public void SetTeam(int newTeam)
+    {
+        if (newTeam != -1 && newTeam != 1 && newTeam != 0)
+        {
+            Debug.LogError("Invalid Team Change");
+            return;
+        }
 
+        if (newTeam == 1)
+        {
+            team = newTeam;
+            GetComponentInChildren<Renderer>().material = frownMat;
+        }
+        else if (newTeam == -1)
+        {
+            team = newTeam;
+            GetComponentInChildren<Renderer>().material = smileMat;
+        }
+        else
+        {
+            GetComponentInChildren<Renderer>().material = default;
+        }
+
+    }
     public float getWeight() { return Weight; }
     public void setWeight(float newWeight)
     {

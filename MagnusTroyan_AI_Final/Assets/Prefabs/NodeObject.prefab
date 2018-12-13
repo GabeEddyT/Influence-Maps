@@ -45,3 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Weight: 0
   NodeSizeMultiplier: 0.75
+  isOccupiedByUnit: 0
+  team: 0
+  frownMat: {fileID: 2100000, guid: 86d3249387b1e77499dd4eeef96add4d, type: 2}
+  smileMat: {fileID: 2100000, guid: 3ffa6434a77d9a7499137c6141de78c3, type: 2}
