@@ -20,6 +20,7 @@ public class InputManager : MonoBehaviour
     bool enterUnitPlacingMode = false;
     NodeList prevPath = new NodeList();
     GameObject textTransform;
+    public GameObject helpText;
     static float multiplier = 5.0f;
     public InputManager Singleton;
 
@@ -263,6 +264,8 @@ public class InputManager : MonoBehaviour
 		{
 			SceneManager.LoadScene(0);
 		}
+
+        helpText.transform.GetChild(0).gameObject.SetActive(Input.GetKey(KeyCode.Tab));
     }
 
     IEnumerator PreviewRadius()
