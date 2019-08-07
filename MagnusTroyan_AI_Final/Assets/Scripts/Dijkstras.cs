@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -330,25 +330,6 @@ public static class Dijkstras
         }
 
         return connections;
-
-        //if (Contains(Direction.NE) && !Contains(Direction.N) && !Contains( Direction.E))
-        //{
-        //    connections.Remove(fuck[Direction.NE]);
-        //}
-        //if (Contains(Direction.SE) && !Contains(Direction.E) && !Contains(Direction.S))
-        //{
-        //    connections.Remove(fuck[Direction.SE]);
-        //}
-        //if (Contains(Direction.SW) && !Contains(Direction.S) && !Contains(Direction.W))
-        //{
-        //    connections.Remove(fuck[Direction.SW]);
-        //}
-        //if (Contains(Direction.NW) && !Contains(Direction.N) && !Contains(Direction.W))
-        //{
-        //    connections.Remove(fuck[Direction.NW]);
-        //}
-
-
     }
 
     public static void ColorPath(NodeList path)
